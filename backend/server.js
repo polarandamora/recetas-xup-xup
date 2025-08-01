@@ -45,6 +45,7 @@ app.get('/api/recipes', async (req, res) => {
             timers: row[4] ? row[4].split(',').map(item => parseInt(item.trim(), 10)) : [],
             imageUrl: row[5] // Add this line to include the image URL
         }));
+        console.log('Fetched recipes with image URLs:', recipes.map(r => r.imageUrl)); // Log image URLs
         res.json(recipes);
     } catch (error) {
         res.status(500).send('Error retrieving recipe data');
