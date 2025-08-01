@@ -20,7 +20,7 @@ async function getSheetsData() {
         const sheets = google.sheets({ version: 'v4', auth });
 
         const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-        const range = 'Recetas!A2:E'; 
+        const range = 'Recetas!A2:F'; 
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId,
@@ -42,7 +42,8 @@ app.get('/api/recipes', async (req, res) => {
             name: row[1],
             ingredients: row[2].split(',').map(item => item.trim()),
             steps: row[3].split('\n').map(item => item.trim()),
-            timers: row[4] ? row[4].split(',').map(item => parseInt(item.trim(), 10)) : []
+            timers: row[4] ? row[4].split(',').map(item => parseInt(item.trim(), 10)) : [],
+            imageUrl: row[5] // Add this line to include the image URL
         }));
         res.json(recipes);
     } catch (error) {
