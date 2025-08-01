@@ -40,6 +40,7 @@ const RecipeList = ({ recipes, onRecipeClick }) => (
     <div className="recipe-list">
         {recipes.map(recipe => (
             <div key={recipe.id} className="recipe-card" onClick={() => onRecipeClick(recipe)}>
+                <img src={recipe.image} alt={recipe.name} />
                 <h2>{recipe.name}</h2>
             </div>
         ))}
