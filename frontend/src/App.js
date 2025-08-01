@@ -23,7 +23,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Mis Recetas</h1>
+                <h1>Les Meves Receptes</h1>
             </header>
             <main>
                 {selectedRecipe ? (
@@ -50,14 +50,17 @@ const RecipeList = ({ recipes, onRecipeClick }) => (
 const RecipeDetails = ({ recipe, onBack }) => {
     return (
         <div className="recipe-details">
-            <button onClick={onBack} className="back-button">← Volver</button>
-            <h1>{recipe.name}</h1>
+            <div className="recipe-details-header">
+                {recipe.imageUrl && <img src={recipe.imageUrl} alt={recipe.name} className="recipe-details-image" />}
+                <button onClick={onBack} className="back-button">←</button>
+                <h1 className="recipe-details-title-overlay">{recipe.name}</h1>
+            </div>
             <div className="recipe-content">
                 <div className="ingredients">
-                    <h2>Ingredientes</h2>
+                    <h2>Ingredients</h2>
                     <ul>
                         {recipe.ingredients.map((ingredient, index) => (
-                            <li key={index}>{ingredient}</li>
+                            <li key={index}>{ingredient.toUpperCase()}</li>
                         ))}
                     </ul>
                 </div>
@@ -111,8 +114,10 @@ const Timer = ({ duration }) => {
     return (
         <div className="timer">
             <div className="time-display">{formatTime()}</div>
-            <button onClick={toggle}>{isActive ? 'Pausar' : 'Iniciar'}</button>
-            <button onClick={reset}>Reiniciar</button>
+            <div className='timer-buttons'>
+                <button onClick={toggle}>{isActive ? 'Pausar' : 'Iniciar'}</button>
+                <button onClick={reset}>Reiniciar</button>
+            </div>
         </div>
     );
 };
