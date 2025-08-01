@@ -6,7 +6,7 @@ function App() {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/recipes')
+        fetch('/api/recipes')
             .then(response => response.json())
             .then(data => setRecipes(data))
             .catch(error => console.error('Error fetching recipes:', error));
