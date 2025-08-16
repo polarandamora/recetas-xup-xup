@@ -83,33 +83,60 @@ const RecipeDetails = ({ recipe, onBack }) => {
 };
 
 const Timer = ({ duration }) => {
-    const [timeLeft, setTimeLeft] = useState(duration * 60);
-    const [isActive, setIsActive] = useState(false);
+    const totalDurationSeconds = duration * 60;
+    const [remainingTime, setRemainingTime] = useState(totalDurationSeconds);
+    const [isRunning, setIsRunning] = useState(false);
+    const [startTime, setStartTime] = useState(null);
+    const [elapsedTimeAtPause, setElapsedTimeAtPause] = useState(0); // in seconds
 
     useEffect(() => {
         let interval = null;
-        if (isActive && timeLeft > 0) {
+
+        if (isRunning && remainingTime > 0) {
+            // Set startTime only once when starting or resuming
+            if (startTime === null) {
+                setStartTime(Date.now());
+            }
+
             interval = setInterval(() => {
-                setTimeLeft(timeLeft => timeLeft - 1);
-            }, 1000);
-        } else if (!isActive && timeLeft !== 0) {
+                const currentElapsed = (Date.now() - startTime) / 1000 + elapsedTimeAtPause;
+                const newRemaining = totalDurationSeconds - currentElapsed;
+
+                if (newRemaining <= 0) {
+                    setRemainingTime(0);
+                    setIsRunning(false);
+                    clearInterval(interval);
+                } else {
+                    setRemainingTime(newRemaining);
+                }
+            }, 100); // Update every 100ms for smoother display
+        } else if (!isRunning && remainingTime !== 0) {
             clearInterval(interval);
         }
+
         return () => clearInterval(interval);
-    }, [isActive, timeLeft]);
+    }, [isRunning, remainingTime, startTime, elapsedTimeAtPause, totalDurationSeconds]);
 
     const toggle = () => {
-        setIsActive(!isActive);
+        if (isRunning) { // Pausing
+            setElapsedTimeAtPause(totalDurationSeconds - remainingTime);
+            setIsRunning(false);
+        } else { // Starting or Resuming
+            setStartTime(Date.now());
+            setIsRunning(true);
+        }
     };
 
     const reset = () => {
-        setTimeLeft(duration * 60);
-        setIsActive(false);
+        setIsRunning(false);
+        setRemainingTime(totalDurationSeconds);
+        setStartTime(null);
+        setElapsedTimeAtPause(0);
     };
 
     const formatTime = () => {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = Math.floor(remainingTime % 60); // Use floor for seconds
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
@@ -117,7 +144,7 @@ const Timer = ({ duration }) => {
         <div className="timer">
             <div className="time-display">{formatTime()}</div>
             <div className='timer-buttons'>
-                <button onClick={toggle}>{isActive ? 'Pausar' : 'Iniciar'}</button>
+                <button onClick={toggle}>{isRunning ? 'Pausar' : 'Iniciar'}</button>
                 <button onClick={reset}>Reiniciar</button>
             </div>
         </div>
