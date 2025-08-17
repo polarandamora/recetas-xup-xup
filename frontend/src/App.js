@@ -42,8 +42,8 @@ const RecipeList = ({ recipes, onRecipeClick }) => (
             <div key={recipe.id} className="recipe-card" onClick={() => onRecipeClick(recipe)}>
                 <div className="recipe-card-image-container">
                     {recipe.imageUrl && <img src={recipe.imageUrl} alt={recipe.name} className="recipe-image" />}
-                    <h2 className="recipe-title-overlay">{recipe.name}</h2>
                 </div>
+                <h2 className="recipe-title">{recipe.name}</h2>
             </div>
         ))}
     </div>
@@ -90,7 +90,7 @@ const Timer = ({ duration }) => {
 
     useEffect(() => {
         // Create a new worker
-        workerRef.current = new Worker('./worker.js', { type: 'module' });
+        workerRef.current = new Worker('worker.js', { type: 'module' });
 
         // Set up message handling
         workerRef.current.onmessage = (e) => {
