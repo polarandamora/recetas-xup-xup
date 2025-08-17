@@ -26,6 +26,13 @@ body {
 }
 
 .recipe-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative; /* Needed for absolute positioning of overlay */
+    overflow: hidden; /* Ensures content stays within rounded corners */
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
@@ -48,6 +55,35 @@ body {
   margin: 10px;
 }
 
+.recipe-card-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    overflow: hidden;
+}
+
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0; /* Top corners rounded */
+}
+
+.recipe-title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+    color: white;
+    padding: 10px 0;
+    margin: 0;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; /* Glow effect */
+    text-align: center;
+    box-sizing: border-box;
+}
+
 .recipe-details {
     padding: 20px;
     max-width: 800px;
@@ -58,14 +94,46 @@ body {
     text-align: left;
 }
 
+.recipe-details-header {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Adjust as needed for the desired image height */
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.recipe-details-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recipe-details-title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Darker overlay for better text contrast */
+    color: white;
+    padding: 15px 0;
+    margin: 0;
+    font-size: 2em;
+    text-shadow: 0 0 15px #fff, 0 0 25px #fff, 0 0 35px #fff; /* Stronger glow */
+    text-align: center;
+    box-sizing: border-box;
+}
+
 .back-button {
-    background: #61dafb;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     color: white;
     cursor: pointer;
-    margin-bottom: 20px;
+    position: absolute; /* Position over the image */
+    top: 20px;
+    left: 20px;
+    z-index: 10; /* Ensure it's above the image */
 }
 
 .recipe-content {
@@ -88,8 +156,8 @@ body {
 .timer {
     margin-top: 10px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
 }
 
 .timer button {
@@ -99,6 +167,7 @@ body {
     padding: 5px 10px;
     border-radius: 3px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .time-display {
