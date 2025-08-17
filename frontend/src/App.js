@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -82,29 +82,46 @@ const RecipeDetails = ({ recipe, onBack }) => {
     );
 };
 
+
 const Timer = ({ duration }) => {
     const [timeLeft, setTimeLeft] = useState(duration * 60);
     const [isActive, setIsActive] = useState(false);
+    const workerRef = useRef(null);
 
     useEffect(() => {
-        let interval = null;
-        if (isActive && timeLeft > 0) {
-            interval = setInterval(() => {
-                setTimeLeft(timeLeft => timeLeft - 1);
-            }, 1000);
-        } else if (!isActive && timeLeft !== 0) {
-            clearInterval(interval);
-        }
-        return () => clearInterval(interval);
-    }, [isActive, timeLeft]);
+        // Create a new worker
+        workerRef.current = new Worker('./worker.js', { type: 'module' });
+
+        // Set up message handling
+        workerRef.current.onmessage = (e) => {
+            setTimeLeft(e.data.timeLeft);
+            if (e.data.timeLeft === 0) {
+                setIsActive(false);
+            }
+        };
+
+        // Post initial message to set the duration
+        workerRef.current.postMessage({ action: 'reset', duration });
+
+        // Terminate the worker on component unmount
+        return () => {
+            workerRef.current.terminate();
+        };
+    }, [duration]);
 
     const toggle = () => {
-        setIsActive(!isActive);
+        const newIsActive = !isActive;
+        setIsActive(newIsActive);
+        if (newIsActive) {
+            workerRef.current.postMessage({ action: 'start', duration });
+        } else {
+            workerRef.current.postMessage({ action: 'pause' });
+        }
     };
 
     const reset = () => {
-        setTimeLeft(duration * 60);
         setIsActive(false);
+        workerRef.current.postMessage({ action: 'reset', duration });
     };
 
     const formatTime = () => {
