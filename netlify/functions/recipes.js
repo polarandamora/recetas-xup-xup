@@ -28,7 +28,6 @@ exports.handler = async function(event, context) {
 
     const sheets = google.sheets({ version: 'v4', auth });
     const range = 'Recetas!A2:F'; // Changed range to include column F for image URL
-    const range = 'Recetas!A2:F';
 
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId,
@@ -45,8 +44,6 @@ exports.handler = async function(event, context) {
         steps: row[3] ? row[3].split('\n').map(item => item.trim()) : [],
         timers: row[4] ? row[4].split(',').map(item => parseInt(item.trim(), 10) || 0) : [],
         imageUrl: row[5] || '' // Added imageUrl from column F
-        timers: row[4] ? row[4].split(',').map(item => parseInt(item.trim(), 10) || 0) : [],
-        image: row[5] || ''
     }));
 
     return {
