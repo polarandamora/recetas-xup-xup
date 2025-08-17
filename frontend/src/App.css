@@ -26,6 +26,13 @@ body {
 }
 
 .recipe-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative; /* Needed for absolute positioning of overlay */
+    overflow: hidden; /* Ensures content stays within rounded corners */
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
@@ -46,6 +53,35 @@ body {
 .recipe-card h2 {
   font-size: 1.2em;
   margin: 10px;
+}
+
+.recipe-card-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    overflow: hidden;
+}
+
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0; /* Top corners rounded */
+}
+
+.recipe-title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+    color: white;
+    padding: 10px 0;
+    margin: 0;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; /* Glow effect */
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .recipe-details {
